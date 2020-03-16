@@ -1,35 +1,66 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
-// This is the code for your desktop app.
-// Press Ctrl+F5 (or go to Debug > Start Without Debugging) to run your app.
-
+using System.Speech.Synthesis;
 namespace MazeTTS
 {
     public partial class Form1 : Form
     {
+
+        private int speechRate = 0;
+        private int speechVolume = 50;
+
         public Form1()
         {
             InitializeComponent();
-        }
-
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            // Click on the link below to continue learning how to build a desktop app using WinForms!
-            System.Diagnostics.Process.Start("http://aka.ms/dotnet-get-started-desktop");
+            voicesList();
 
         }
+        SpeechSynthesizer speechSynthesizerObj;
 
-        private void button1_Click(object sender, EventArgs e)
+        private void play_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Thanks!");
+            if (textBox1.Text != "")
+            {
+                speechSynthesizerObj = new SpeechSynthesizer
+                {
+                    Volume = speechVolume,
+                    Rate = speechRate
+                };
+                speechSynthesizerObj.SelectVoice(voiceBox.Text);
+                speechSynthesizerObj.SpeakAsync(textBox1.Text);
+                play.Enabled = false;
+                speechSynthesizerObj.SpeakCompleted += new EventHandler<SpeakCompletedEventArgs>(speechEnded);
+            }
+        }
+        private void speechEnded(object sender, SpeakCompletedEventArgs e)
+        {
+            play.Enabled = true;
+        }
+
+        private void stop_Click(object sender, EventArgs e)
+        {
+            speechSynthesizerObj.SpeakAsyncCancelAll();
+        }
+
+        private void rateBar_Scroll(object sender, EventArgs e)
+        {
+            speechRate = rateBar.Value;
+        }
+
+        private void volumeBar_Scroll(object sender, EventArgs e)
+        {
+            speechVolume = volumeBar.Value;
+        }
+
+        private void voicesList()
+        {
+            speechSynthesizerObj = new SpeechSynthesizer();
+            foreach (var voice in speechSynthesizerObj.GetInstalledVoices())
+            {
+                voiceBox.Items.Add(voice.VoiceInfo.Name);
+            }
+            voiceBox.SelectedIndex = 0;
+
         }
     }
 }
