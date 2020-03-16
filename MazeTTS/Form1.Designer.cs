@@ -129,7 +129,6 @@ namespace MazeTTS
             this.label3.Size = new System.Drawing.Size(34, 13);
             this.label3.TabIndex = 8;
             this.label3.Text = "Voice";
-
             // 
             // Form1
             // 
@@ -147,6 +146,7 @@ namespace MazeTTS
             this.Controls.Add(this.stop);
             this.Controls.Add(this.play);
             this.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
